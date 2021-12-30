@@ -1,7 +1,8 @@
 pipeline {
     environment {
     registry = "viswamy/studentapprestapi"
-    registryCredential = dockerhub
+    registryCredential = 'dockerhub'
+    dockerImage = ''
     }
     agent any
     tools{
