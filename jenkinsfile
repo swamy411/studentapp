@@ -1,4 +1,8 @@
 pipeline {
+    environment {
+    registry = "viswamy/studentapprestapi"
+    registryCredential = ‘dockerhub’
+    }
     agent any
     tools{
         maven 'maven'
@@ -15,10 +19,13 @@ pipeline {
             }
         }
 	
-        stage('Docker Build') {
-            steps {
-                script {
-                    docker.build("viswamy/studentapprestapi:${TAG}")
+        stage('Building image') {
+        steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
                 }
             }
         }
@@ -32,12 +39,17 @@ pipeline {
                 }
             }
         }
-        stage('Deploy'){
-            steps {
-                sh "docker studentapprestapi | true"
-                sh "docker rm studentapprestapi | true"
-                sh "docker run --name studentapprestapi -d -p 8080:8080 viswamy/studentapprestapi:${TAG}"
-            }
-        }
+	  stage('Deploy Image') {
+	  steps{    script {
+	      docker.withRegistry( '', registryCredential ) {
+		dockerImage.push()
+	      }
+	    }
+	  }
+	  stage('Remove Unused docker image') {
+	  steps{
+	    sh "docker rmi $registry:$BUILD_NUMBER"
+	  }
+	}
     }
 }
