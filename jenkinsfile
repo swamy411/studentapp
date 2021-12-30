@@ -5,12 +5,6 @@ pipeline {
         jdk  'jdk'
         }            
     stages {
-        stage ('Github_login') {
-            steps {
-                 git credentialsId: 'github', url: 'https://github.com/bhairavaswamyvijjapu/studentapp.git'
-                 
-            }
-        }
         stage ('Build') {
             steps {
                sh '''export MAVEN_HOME=/opt/maven
