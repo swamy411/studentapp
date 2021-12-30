@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    tools{
+        maven 'maven'
+        jdk  'jdk'
+        }            
+    stages {
+        stage ('Github_login') {
+            steps {
+                 git credentialsId: 'github', url: 'https://github.com/bhairavaswamyvijjapu/studentapp.git'
+                 
+            }
+        }
+        stage ('Build') {
+            steps {
+               sh '''export MAVEN_HOME=/opt/maven
+                     export PATH=$PATH:$MAVEN_HOME/bin
+                     mvn --version
+                     mvn clean package'''
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                script {
+                    docker.build("viswamy/studentapprestapi:${TAG}")
+                }
+            }
+        }
+	    stage('Pushing Docker Image to Dockerhub') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_credential') {
+                        docker.image("viswamy/studentapprestapi:${TAG}").push()
+                        docker.image("viswamy/studentapprestapi:${TAG}").push("latest")
+                    }
+                }
+            }
+        }
+        stage('Deploy'){
+            steps {
+                sh "docker studentapprestapi | true"
+                sh "docker rm studentapprestapi | true"
+                sh "docker run --name studentapprestapi -d -p 8080:8080 viswamy/studentapprestapi:${TAG}"
+            }
+        }
+    }
+}
