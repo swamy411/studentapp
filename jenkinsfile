@@ -19,16 +19,14 @@ pipeline {
             }
         }
 	
-        stage('Building image') {
-        steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        }
-      }
-    }
-                }
-            }
-        }
+		stage('Building image') {
+		steps{
+		script {
+		  dockerImage = docker.build registry + ":$BUILD_NUMBER"
+		}
+	      }
+	    }
+               
 	    stage('Pushing Docker Image to Dockerhub') {
             steps {
                 script {
