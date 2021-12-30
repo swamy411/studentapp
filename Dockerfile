@@ -35,5 +35,6 @@ FROM java:8
 EXPOSE 8080
 MAINTAINER Swamy
 # RUN mvn clean install
+RUN apt-get update && apt-get install -y docker.io 267 && rm -rf /var/lib/apt/lists/*
 ADD /var/jenkins_home/workspace/docker-test/target/studentapp-0.0.1-SNAPSHOT.jar studentapp-0.0.1-SNAPSHOT.jar
 ENTRYPOINT ["java","-jar","studentapp-0.0.1-SNAPSHOT.jar"]
