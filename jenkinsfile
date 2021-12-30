@@ -7,8 +7,6 @@ pipeline {
     agent any
     tools{
         maven 'maven'
-        jdk  'jdk'
-	dockerTool 'docker'
         }            
     stages {
         stage ('Initialize') {
