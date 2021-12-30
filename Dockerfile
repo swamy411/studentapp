@@ -33,6 +33,7 @@
 
 FROM java:8
 EXPOSE 8080
+MAINTAINER Swamy
 # RUN mvn clean install
 ADD /var/jenkins_home/workspace/docker-test/target/studentapp-0.0.1-SNAPSHOT.jar studentapp-0.0.1-SNAPSHOT.jar
 ENTRYPOINT ["java","-jar","studentapp-0.0.1-SNAPSHOT.jar"]
