@@ -22,7 +22,7 @@ pipeline {
 	stage('Building image') {
 	   steps{
 	   script {
-		  dockerImage = docker.build registry + ":v1"
+		 sudo  dockerImage = docker.build registry + ":v1"
 		}
 	      }
 	    }
